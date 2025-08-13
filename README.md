@@ -75,7 +75,7 @@ cmake \
 Now we will Compile and install (This step will take some time to run ~30min)
 ```console
 make -j$(nproc)
-make install
+sudo make install
 ```
 Lets confirm to see if all of the above went as planned.
 ```console
