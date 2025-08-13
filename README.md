@@ -32,4 +32,5 @@ Refresh the local cache of available packages and their versions from the config
 ```console
 sudo apt update
 ```
-test
+<span style="color:red;">Please follow the next instructions carefully. Failure to do so could mean having to spend a lot of time fixing things.</span>
+
