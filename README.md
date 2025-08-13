@@ -79,7 +79,7 @@ sudo make install
 ```
 Lets confirm to see if all of the above went as planned.
 ```console
-cd ~/home/keystoneltf
+cd ~
 mkdir dev
 cd dev
 python3
@@ -94,7 +94,7 @@ You should see YES and in the build information you should see Gstreamer: YES. T
 
 If not already navigate to the dev folder we create in the last step.
 ```console
-cd ~/home/keystoneltf/dev
+cd ~/dev
 ```
 Now we will clone the repo
 ```console
