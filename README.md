@@ -34,6 +34,13 @@ Refresh the local cache of available packages and their versions from the config
 ```console
 sudo apt update && sudo apt upgrade
 ```
+We will also at this point install the firewall and allow the port 554 through (this is for the image server to communicate to the VM)
+```console
+sudo apt install ufw
+sudo ufw allow 554/tcp
+sudo ufw allow 554/udp
+```
+
 $$\textcolor{red}{\textnormal{Please follow the next instructions carefully. Failure to do so could mean having to spend a lot of time fixing things.}}$$
 
 Now we must build OpenCV-Python onto the RPI with gstreamer support. This will take some time.
