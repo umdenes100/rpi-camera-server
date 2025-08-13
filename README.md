@@ -40,14 +40,33 @@ Now we must build OpenCV-Python onto the RPI with gstreamer support. This will t
 
 First install system dependencies.
 ```console
-sudo apt-get update
-sudo apt-get install -y \
+sudo apt update
+sudo apt install -y \
     build-essential cmake git pkg-config \
     libgtk-3-dev libavcodec-dev libavformat-dev libswscale-dev \
     libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev \
     libjpeg-dev libpng-dev libtiff-dev \
     libxvidcore-dev libx264-dev \
     libatlas-base-dev gfortran
+```
+These are some things we can use for command line tools and developer reasons.
+```console
+sudo apt update
+sudo apt install \
+  gstreamer1.0-tools \
+  gstreamer1.0-plugins-base \
+  gstreamer1.0-plugins-good \
+  gstreamer1.0-plugins-bad \
+  gstreamer1.0-plugins-ugly \
+  gstreamer1.0-libav \
+  gstreamer1.0-x \
+  gstreamer1.0-gl \
+  gstreamer1.0-gtk3 \
+  gstreamer1.0-qt5 \
+  gstreamer1.0-pulseaudio \
+  v4l-utils \
+  libv4l-dev \
+  libcamera-dev libcamera-apps
 ```
 Clone the OpenCV repos.
 ```console
@@ -120,4 +139,12 @@ Now run the stream!
 ```console
 python3 send_stream.py
 ```
+
+## Step 4: Extras (WiFi, SSH, etc.)
+
+Enable WiFi (log in if you need/want this, you may need to use a hotspot on your phone for temp WiFi connection, this should generally not be permanent as ethernet is much better)
+```console
+sudo rfkill unblock all
+```
+
 
