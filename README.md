@@ -71,7 +71,7 @@ cmake \
   -D BUILD_EXAMPLES=OFF \
   ~/opencv
 ```
-Now we will Compile and install (This step will take some time to run ~30min)
+Now we will Compile and install (This step sometimes can take some time to run ~30min, do not disconnect power while this is running)
 ```console
 make -j$(nproc)
 sudo make install
