@@ -29,7 +29,5 @@ If prompted, enable SSH (otherwise we will do this later.
 Open a terminal (ctrl+alt+t)
 
 Refresh the local cache of available packages and their versions from the configured software repositories.
-'''console
-sudo apt update
-'''
+```console sudo apt update ```
 test
