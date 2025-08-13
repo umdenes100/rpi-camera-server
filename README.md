@@ -107,7 +107,7 @@ nano send_stream.py
 Look at the top for GST_HOST = "10.112.9.33"
 Please set X.X.X.X to the Internal IP of the VM that you want to send the stream to. Check the WiFi Registration Tracker for this number.
 
-Press ctrl+x then y to save your changes.
+Press ctrl+x then y, then ENTER to save your changes.
 
 Last thing before we run the stream is we are going to setup a tmux session so that the stream can be checked on via an SSH connection.
 ```console
