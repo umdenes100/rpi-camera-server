@@ -54,19 +54,26 @@ git clone https://github.com/opencv/opencv.git
 git clone https://github.com/opencv/opencv_contrib.git
 ```
 Create the build directory and configure CMake to enable Gstreamer support
+NOTE: in the command where it says python3.XX.X, replace XX.X with your appropraite python version. (python --version)
 ```console
 mkdir -p ~/build/opencv && cd ~/build/opencv
 
 cmake \
   -D CMAKE_BUILD_TYPE=RELEASE \
-  -D CMAKE_INSTALL_PREFIX=$VIRTUAL_ENV \
+  -D CMAKE_INSTALL_PREFIX=/home/keystoneltf/opencv_install \
   -D OPENCV_EXTRA_MODULES_PATH=~/opencv_contrib/modules \
   -D WITH_GSTREAMER=ON \
   -D BUILD_opencv_python3=ON \
   -D PYTHON3_EXECUTABLE=$VIRTUAL_ENV/bin/python3 \
   -D PYTHON3_INCLUDE_DIR=$(python3 -c "from sysconfig import get_paths; print(get_paths()['include'])") \
-  -D PYTHON3_PACKAGES_PATH=$VIRTUAL_ENV/lib/python3.10/site-packages \
+  -D PYTHON3_PACKAGES_PATH=$VIRTUAL_ENV/lib/python3.XX.X/site-packages \
   -D BUILD_EXAMPLES=OFF \
   ~/opencv
 ```
+Now we will Compile and install
+```console
+make -j$(nproc)
+make install
+```
+
 
