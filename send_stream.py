@@ -7,7 +7,7 @@ import subprocess
 # 1) EDIT THESE VALUES TO MATCH YOUR NETWORK/SETUP
 # ─────────────────────────────────────────────────────────────────
 
-GST_HOST = "10.112.9.33"
+GST_HOST = "X.X.X.X"
 GST_PORT = 554
 CAP_WIDTH = 1920
 CAP_HEIGHT = 1080
