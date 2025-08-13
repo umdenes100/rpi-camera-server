@@ -102,7 +102,7 @@ cd rpi-camera-server
 ```
 Lets make double check the config to make sure our server is pointing to the right Virtual Machine Server.
 ```console
-nano send_stream.py (DELETE THIS NOTE, BUT MAY HAVE TO INCLUDE INSTRUCTION TO INSTALL NANO)
+nano send_stream.py
 ```
 Look at the top for GST_HOST = "10.112.9.33"
 Please set X.X.X.X to the Internal IP of the VM that you want to send the stream to. Check the WiFi Registration Tracker for this number.
