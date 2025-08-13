@@ -7,7 +7,9 @@ A camera server designed to be run on Raspberry Pi 5 and used with the RPI Camer
 
 Please install the active cooler onto the RPI. There will be two plastic pins that lock in place and you must plug in the fan header. Please look this up if you do not know how.
 
-Additionally you will need a >=27W power supply, a micro hdmi cable, a mouse, a keyboard, and a valid ethernet connection.
+Additionally you will need a >=27W power supply, a micro hdmi cable, a mouse, a keyboard, the camera, and a valid ethernet connection.
+
+If the camera is USB smply plug it in like you would any device. If it is a camera module, please make sure the RPI is unplugged and attach the camera module to CAM/DISP 0 appropriately. Please look this up if you do not know how.
 
 ## Step 1: First time boot RPI 5
 
@@ -70,10 +72,53 @@ cmake \
   -D BUILD_EXAMPLES=OFF \
   ~/opencv
 ```
-Now we will Compile and install
+Now we will Compile and install (This step will take some time to run ~30min)
 ```console
 make -j$(nproc)
 make install
 ```
+Lets confirm to see if all of the above went as planned.
+```console
+cd ~/home/keystoneltf
+mkdir dev
+cd dev
+python3
+```
+```python
+>>> import cv2
+>>> print('GStreamer:', 'YES' if cv2.getBuildInformation().count('GStreamer')>0 else 'NO')
+```
+You should see YES and in the build information you should see Gstreamer: YES. THat means that everything worked and we are ready to upload the program and run it!
 
+## Step 3: Clone, configure, and run it!
+
+If not already navigate to the dev folder we create in the last step.
+```console
+cd ~/home/keystoneltf/dev
+```
+Now we will clone the repo
+```console
+git clone https://github.com/umdenes100/rpi-camera-server.git
+cd rpi-camera-server
+```
+Lets make double check the config to make sure our server is pointing to the right Virtual Machine Server.
+```console
+nano send_stream.py (DELETE THIS NOTE, BUT MAY HAVE TO INCLUDE INSTRUCTION TO INSTALL NANO)
+```
+Look at the top for GST_HOST = "10.112.9.33"
+Please set X.X.X.X to the Internal IP of the VM that you want to send the stream to. Check the WiFi Registration Tracker for this number.
+
+Press ctrl+x then y to save your changes.
+
+Last thing before we run the stream is we are going to setup a tmux session so that the stream can be checked on via an SSH connection.
+```console
+sudo apt install tmux
+tmux
+```
+I encourage you to look up a little bit about what tmux is, its a very useful tool to know.
+
+Now run the stream!
+```console
+python3 send_stream.py
+```
 
