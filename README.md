@@ -28,8 +28,45 @@ If prompted, enable SSH (otherwise we will do this later.
 
 Open a terminal (ctrl+alt+t)
 
-Refresh the local cache of available packages and their versions from the configured software repositories.
+Refresh the local cache of available packages and their versions from the configured software repositories. Will upgrade packages on the RPI as well.
 ```console
-sudo apt update
+sudo apt update && sudo apt upgrade
 ```
-<code style="color : red">Please follow the next instructions carefully. Failure to do so could mean having to spend a lot of time fixing things.</code>
+$$\textcolor{red}{\textnormal{Please follow the next instructions carefully. Failure to do so could mean having to spend a lot of time fixing things.}}$$
+
+Now we must build OpenCV-Python onto the RPI with gstreamer support. This will take some time.
+
+First install system dependencies.
+```console
+sudo apt-get update
+sudo apt-get install -y \
+    build-essential cmake git pkg-config \
+    libgtk-3-dev libavcodec-dev libavformat-dev libswscale-dev \
+    libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev \
+    libjpeg-dev libpng-dev libtiff-dev \
+    libxvidcore-dev libx264-dev \
+    libatlas-base-dev gfortran
+```
+Clone the OpenCV repos.
+```console
+cd ~
+git clone https://github.com/opencv/opencv.git
+git clone https://github.com/opencv/opencv_contrib.git
+```
+Create the build directory and configure CMake to enable Gstreamer support
+```console
+mkdir -p ~/build/opencv && cd ~/build/opencv
+
+cmake \
+  -D CMAKE_BUILD_TYPE=RELEASE \
+  -D CMAKE_INSTALL_PREFIX=$VIRTUAL_ENV \
+  -D OPENCV_EXTRA_MODULES_PATH=~/opencv_contrib/modules \
+  -D WITH_GSTREAMER=ON \
+  -D BUILD_opencv_python3=ON \
+  -D PYTHON3_EXECUTABLE=$VIRTUAL_ENV/bin/python3 \
+  -D PYTHON3_INCLUDE_DIR=$(python3 -c "from sysconfig import get_paths; print(get_paths()['include'])") \
+  -D PYTHON3_PACKAGES_PATH=$VIRTUAL_ENV/lib/python3.10/site-packages \
+  -D BUILD_EXAMPLES=OFF \
+  ~/opencv
+```
+
