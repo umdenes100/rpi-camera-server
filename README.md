@@ -11,7 +11,11 @@ Additionally you will need a >=27W power supply, a micro hdmi cable, a mouse, a 
 
 If the camera is USB smply plug it in like you would any device. If it is a camera module, please make sure the RPI is unplugged and attach the camera module to CAM/DISP 0 appropriately. Please look this up if you do not know how.
 
+Lastly, please ensure there is an SD card inserted onto the back of the RPI 5.
+
 ## Step 1: First time boot RPI 5
+
+When plugging power into the RPI 5 for the first time, please press and hold the SHIFT key while it powers on to launch Network install.
 
 Follow the majority of the setup instructions that make intuitive sense (i.e. date, time, language, etc.)
 
