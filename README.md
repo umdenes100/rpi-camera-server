@@ -17,11 +17,15 @@ Lastly, please ensure there is an SD card inserted onto the back of the RPI 5.
 
 When plugging power into the RPI 5 for the first time, please press and hold the SHIFT key while it powers on to launch Network install.
 
+Ethernet connection: Connect an Ethernet cable from the RPi to your laptop, using an adapter if necessary. Hit the Windows button + R to open your network connections. Eduroam may not be able to feed WiFi to the RPi, so use a phone hotspot if possible. Select your WiFi connection and your new Ethernet connection simultaneously (using CTRL) and request to Bridge the connection. Once the connection is bridged, the RPi should be receiving WiFi from your laptop. If there is an error, you may need to unplug and replug the power cord for the RPi to reset the boot. Then press shift to rerun the boot. Disconnect and reconnect Ethernet to retry the network connection process.
+
 Follow the majority of the setup instructions that make intuitive sense (i.e. date, time, language, etc.)
 
 The important things to ensure that you setup properly: 
 
 Choose the recommended 64-bit version of Debian/PI OS.
+The RPi we are using for 2025 is the Raspberry Pi 5.
+Storage: whichever SD card is being used in the RPi.
 
 When prompted to either further config or add extra setup options to the RPI, select edit options or whatever button there is to make these adjustments.
 In this menu set the hostname to the format of KS-RPI-X. Please see the WiFi module Registration tracker sheet to see which hostname you should be setting your device to.
