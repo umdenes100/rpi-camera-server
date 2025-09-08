@@ -9,7 +9,7 @@ Please install the active cooler onto the RPI. There will be two plastic pins th
 
 Additionally you will need a >=27W power supply, a micro hdmi cable, a mouse, a keyboard, the camera, and a valid ethernet connection.
 
-If the camera is USB smply plug it in like you would any device. If it is a camera module, please make sure the RPI is unplugged and attach the camera module to CAM/DISP 0 appropriately. Please look this up if you do not know how.
+If the camera is USB simply plug it in like you would any device. If it is a camera module, please make sure the RPI is unplugged and attach the camera module to CAM/DISP 0 appropriately. Use the orange cable instead of the white cable. The gold side of the connector should be facing up. Lift the brown covers on the camera and RPI port, insert the connector, and press the covers back down to snap the connectors into place. Please look this up if you do not know how.
 
 Lastly, please ensure there is an SD card inserted onto the back of the RPI 5.
 
