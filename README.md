@@ -47,6 +47,10 @@ We will also at this point install the firewall and allow the port 554 through (
 sudo apt install ufw
 sudo ufw allow 554/tcp
 sudo ufw allow 554/udp
+sudo ufw allow 5000/tcp
+sudo ufw allow 5000/udp
+sudo ufw allow 5001/tcp
+sudo ufw allow 5001/udp
 ```
 
 $$\textcolor{red}{\textnormal{Please follow the next instructions carefully. Failure to do so could mean having to spend a lot of time fixing things.}}$$
