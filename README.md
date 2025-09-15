@@ -166,4 +166,14 @@ Enable WiFi (log in if you need/want this, you may need to use a hotspot on your
 sudo rfkill unblock all
 ```
 
+Enable SSH
+```console
+sudo raspi-config
+```
+Navigate to interfaces and enable SSH
 
+Set the Hostname
+```console
+sudo raspi-config
+```
+Navigate to system options -> hostname and set it to the hostname indicated in the WiFi registration sheet
