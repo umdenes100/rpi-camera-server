@@ -87,7 +87,7 @@ sudo apt install \
   libv4l-dev \
   libcamera-dev libcamera-apps
 
-#NEEDS UPDATING FOR THE NEW SYSTEM
+# NEEDS UPDATING FOR THE NEW SYSTEM
 ## Step 3: Clone, configure, and run it!
 
 If not already navigate to the dev folder we create in the last step.
