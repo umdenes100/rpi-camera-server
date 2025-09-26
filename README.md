@@ -86,47 +86,8 @@ sudo apt install \
   v4l-utils \
   libv4l-dev \
   libcamera-dev libcamera-apps
-```
-Clone the OpenCV repos.
-```console
-cd ~
-git clone https://github.com/opencv/opencv.git
-git clone https://github.com/opencv/opencv_contrib.git
-```
-Create the build directory and configure CMake to enable Gstreamer support
-```console
-mkdir -p ~/build/opencv && cd ~/build/opencv
 
-cmake \
-  -D CMAKE_BUILD_TYPE=RELEASE \
-  -D CMAKE_INSTALL_PREFIX=/usr/local \
-  -D OPENCV_EXTRA_MODULES_PATH=~/opencv_contrib/modules \
-  -D WITH_GSTREAMER=ON \
-  -D BUILD_opencv_python3=ON \
-  -D PYTHON3_EXECUTABLE=$(which python3) \
-  -D PYTHON3_INCLUDE_DIR=$(python3 -c "from sysconfig import get_paths; print(get_paths()['include'])") \
-  -D PYTHON3_PACKAGES_PATH=$(python3 -c "from sysconfig import get_paths; print(get_paths()['purelib'])") \
-  -D BUILD_EXAMPLES=OFF \
-  ~/opencv
-```
-Now we will Compile and install (This step sometimes can take some time to run ~30min, do not disconnect power while this is running)
-```console
-make -j$(nproc)
-sudo make install
-```
-Lets confirm to see if all of the above went as planned.
-```console
-cd ~
-mkdir dev
-cd dev
-python3
-```
-```python
->>> import cv2
->>> print('GStreamer:', 'YES' if cv2.getBuildInformation().count('GStreamer')>0 else 'NO')
-```
-You should see YES and in the build information you should see Gstreamer: YES. THat means that everything worked and we are ready to upload the program and run it!
-
+#NEEDS UPDATING FOR THE NEW SYSTEM
 ## Step 3: Clone, configure, and run it!
 
 If not already navigate to the dev folder we create in the last step.
