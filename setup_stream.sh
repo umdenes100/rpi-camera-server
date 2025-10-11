@@ -1,62 +1,43 @@
-#!/usr/bin/env bash
-# setup_stream.sh — one-time setup for Pi 5 + Cam Module 3 streaming
-# Installs deps, writes send_stream.sh with YOUR exact pipeline, chmod +x, then self-deletes.
+#!/bin/bash                                                                                                                                                                                                                                     set -e                                                                                                                                                                                                                                          echo "Updating system and installing required packages..."                                                              sudo apt update                                                                                                         sudo apt full-upgrade -y                                                                                                                                                                                                                        # Install libcamera apps and dependencies                                                                               sudo apt install -y libcamera-apps gstreamer1.0-tools gstreamer1.0-plugins-base \                                           gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly \                                          gstreamer1.0-libav ffmpeg ufw                                                                                                                                                                                                               # Enable camera interface if not already enabled
+if ! grep -q "^camera_auto_detect=1" /boot/config.txt 2>/dev/null; then
+    echo "Enabling camera interfaces..."
+    sudo raspi-config nonint do_camera 0
+fi
 
-set -euo pipefail
+# Ask user for receiver IP and port
+read -rp "Enter the receiver IP address: " RECEIVER_IP
+read -rp "Enter the UDP port number to send the stream to: " RECEIVER_PORT
 
-echo "[*] Updating APT & upgrading..."
-sudo apt update -y
-sudo DEBIAN_FRONTEND=noninteractive apt full-upgrade -y
+# Validate IP and port (basic)
+if ! [[ "$RECEIVER_IP" =~ ^([0-9]{1,3}\.){3}[0-9]{1,3}$ ]]; then
+    echo "Invalid IP address format. Exiting."
+    exit 1
+fi
+if ! [[ "$RECEIVER_PORT" =~ ^[0-9]+$ ]] || [ "$RECEIVER_PORT" -lt 1 ] || [ "$RECEIVER_PORT" -gt 65535 ]; then
+    echo "Invalid port number. Exiting."
+    exit 1
+fi
 
-echo "[*] Installing required packages (rpicam-vid + GStreamer RTP stack)..."
-sudo apt install -y \
-  rpicam-apps \
-  gstreamer1.0-tools \
-  gstreamer1.0-plugins-base \
-  gstreamer1.0-plugins-good \
-  gstreamer1.0-plugins-bad \
-  gstreamer1.0-libav
+# Create send_stream.sh script
+cat << EOF > send_stream.sh
+#!/bin/bash
+# Script to send 1080p@50fps H264 stream to $RECEIVER_IP:$RECEIVER_PORT
 
-echo "[*] Writing send_stream.sh with your preferred pipeline..."
-cat > send_stream.sh <<'EOF'
-#!/usr/bin/env bash
-# send_stream.sh — stream Cam Module 3 via rpicam-vid → RTP(H.264) to HOST:PORT
-# Uses the exact pipeline you provided and prefer.
+# Disable preview by clearing DISPLAY variable
+DISPLAY=
 
-# You can override HOST/PORT via args or env vars.
-HOST="${1:-${HOST:-192.168.1.4}}"
-PORT="${2:-${PORT:-5000}}"
-
-# Tweakables (optional; match your defaults)
-WIDTH="${WIDTH:-1920}"
-HEIGHT="${HEIGHT:-1080}"
-FRAMERATE="${FRAMERATE:-50}"
-BITRATE="${BITRATE:-16000000}"   # bits per second
-INTRA="${INTRA:-50}"             # keyframe interval = fps
-MTU="${MTU:-1200}"               # RTP payload bytes (<= path MTU)
-
-echo "[send_stream] → ${WIDTH}x${HEIGHT}@${FRAMERATE} ~$((${BITRATE}/1000000))Mbps → ${HOST}:${PORT}"
-
-# EXACT pipeline you prefer:
-# rpicam-vid → stdout → fdsrc (timestamps) → h264parse (normalized, SPS/PPS resend) → rtph264pay (RTP) → udpsink
-/usr/bin/rpicam-vid -t 0 --width "${WIDTH}" --height "${HEIGHT}" --framerate "${FRAMERATE}" -n \
-  --codec h264 --profile high --level 4.2 --inline --bitrate "${BITRATE}" --intra "${INTRA}" \
-  --libav-format h264 -o - \
-| gst-launch-1.0 -v \
-    fdsrc fd=0 do-timestamp=true blocksize=65536 \
-  ! h264parse config-interval=-1 disable-passthrough=true \
-  ! rtph264pay pt=96 mtu="${MTU}" \
-  ! udpsink host="${HOST}" port="${PORT}" sync=false async=false
+rpicam-vid --width 1920 --height 1080 --framerate 50 --codec h264 --libav-format=h264 --timeout 0 -o - | \\                                                                   gst-launch-1.0 fdsrc ! h264parse ! rtph264pay config-interval=1 pt=96 ! udpsink host=$RECEIVER_IP port=$RECEIVER_PORT
 EOF
 
 chmod +x send_stream.sh
-echo "[*] Created ./send_stream.sh (executable)."
 
-# Self-delete this setup script
-me="$(realpath "$0" 2>/dev/null || echo "$0")"
-echo "[*] Deleting setup script: $me"
-rm -f "$me"
+echo "Configuring UFW firewall to allow UDP traffic to $RECEIVER_IP:$RECEIVER_PORT..."
 
-echo "[✔] Setup complete."
-echo "Run the stream with:  ./send_stream.sh 192.168.1.4 5000"
-echo "Or override via env:  HOST=192.168.1.4 PORT=5000 ./send_stream.sh"
+# Enable UFW if disabled
+sudo ufw status | grep -q inactive && sudo ufw --force enable
+
+# Allow outgoing UDP packets to specified IP/port                                      sudo ufw allow out to $RECEIVER_IP port $RECEIVER_PORT proto udp
+
+echo "Setup complete. You can start streaming by running ./send_stream.sh"
+
+echo "Deleting setup script to keep only send_stream.sh"                               rm -- "\$0"
