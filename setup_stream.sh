@@ -32,7 +32,7 @@ if ! [[ "$RECEIVER_PORT" =~ ^[0-9]+$ ]] || [ "$RECEIVER_PORT" -lt 1 ] || [ "$REC
   exit 1
 fi
 
-# Create send_stream.sh script
+# Create send_stream.sh script (matches your final working settings)
 cat <<EOF > send_stream.sh
 #!/bin/bash
 set -euo pipefail
@@ -41,11 +41,30 @@ set -euo pipefail
 # Disable preview in headless env
 unset DISPLAY
 
-rpicam-vid \\
-  --width 1920 --height 1080 --framerate 50 \\
-  --codec h264 --libav-format=h264 \\
-  --timeout 0 -o - | \\
-  gst-launch-1.0 fdsrc ! h264parse ! rtph264pay config-interval=1 pt=96 ! \\
+OPTS=(
+  --width 1920
+  --height 1080
+  --framerate 50
+  --codec h264
+  --libav-format h264
+  --bitrate 16000000
+  --profile high
+  --intra 1
+  --inline
+  --saturation 0.5
+  --contrast 1.3
+  --sharpness 1.3
+  --denoise cdn_hq
+  --exposure short
+  --shutter 1000
+  --gain 8.0
+  --awb auto
+  --timeout 0
+  -o -
+)
+
+rpicam-vid "\${OPTS[@]}" | \\
+gst-launch-1.0 fdsrc ! h264parse ! rtph264pay config-interval=1 pt=96 ! \\
   udpsink host=$RECEIVER_IP port=$RECEIVER_PORT
 EOF
 
@@ -54,7 +73,7 @@ chmod +x send_stream.sh
 echo "Configuring UFW firewall to allow UDP traffic to $RECEIVER_IP:$RECEIVER_PORT..."
 
 # Enable UFW if disabled
-if sudo ufw status | grep -q inactive; then
+if sudo ufw status | grep -qi inactive; then
   sudo ufw --force enable
 fi
 
@@ -64,4 +83,4 @@ sudo ufw allow out to "$RECEIVER_IP" port "$RECEIVER_PORT" proto udp
 echo "Setup complete. You can start streaming by running:  ./send_stream.sh"
 
 # Delete this setup script
-rm -- "$0"
+rm -- "\$0"
